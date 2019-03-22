@@ -1,9 +1,13 @@
 package com.gdou.springboot.config;
 
 
+import com.gdou.springboot.component.LoginHandlerInterceptor;
+import com.gdou.springboot.component.MyLocaleReolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -20,17 +24,20 @@ public class MymvcConfig implements WebMvcConfigurer {
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
             registry.addViewController("/gdou").setViewName("success");
+            registry.addViewController("/").setViewName("login");
+            registry.addViewController("/index.html").setViewName("login");
+            registry.addViewController("/main.html").setViewName("dashboard");
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        //静态资源已经被springboot注册的拦截器负责静态映射了
+            registry.addInterceptor(new LoginHandlerInterceptor()).addPathPatterns("/**").excludePathPatterns("/index.html","/","/user/login");
     }
 
     @Bean
-    public WebMvcConfigurer webMvcConfigurer(){
-        WebMvcConfigurer webMvcConfigurer = new WebMvcConfigurer() {
-            @Override
-            public void addViewControllers(ViewControllerRegistry registry) {
-                registry.addViewController("/").setViewName("login");
-                registry.addViewController("/index.html").setViewName("login");
-            }
-        };
-        return webMvcConfigurer;
+    public LocaleResolver localeResolver(){
+        return new MyLocaleReolver();
     }
+
 }
