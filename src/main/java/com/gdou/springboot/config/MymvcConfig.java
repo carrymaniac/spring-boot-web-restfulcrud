@@ -31,7 +31,7 @@ public class MymvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        //静态资源已经被springboot注册的拦截器负责静态映射了
+        //在springboot1.0时期静态资源会被springboot注册的拦截器负责静态映射了,在2.x时代,需要自己重新注册
             registry.addInterceptor(new LoginHandlerInterceptor()).addPathPatterns("/**").excludePathPatterns("/index.html","/","/user/login","/webjars/**","/asserts/**");
     }
 
